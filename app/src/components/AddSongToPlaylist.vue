@@ -1,0 +1,101 @@
+<template>
+  <div id="addtoplaylist" v-if="$store.state.showAddSongToPlaylistComponent">
+    <transition name="modal-playlist">
+      <div class="modal-mask-playlist">
+        <div class="modal-wrapper-playlist">
+          <div class="modal-container-playlist">
+            <div class="modal-body-playlist">
+              <slot name="body-playlist">
+              </slot>
+            </div>
+            <hr>
+
+            <div>
+            
+            <select v-model="selectedPlaylist">
+              <option  v-for="playlist in allplaylists" :value=playlist>
+                {{playlist.name}}
+              </option>
+            </select>
+            <p></p>
+            <button type="button" class="btn btn-secondary" v-on:click="addPlaylistSongEntry()">Add to Playlist</button>
+            </div>
+            <p></p>
+            <div>{{message}}</div>
+            <p></p>
+            <div class="modal-footer-playlist">
+              <slot name="footer-playlist">
+                <button class="modal-default-button-playlist" @click="closeModal()">
+                  OK
+                </button>
+              </slot>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data: function() {
+    return {
+      message: "---",
+      allplaylists: [],
+      selectedPlaylist: {},
+    }
+  },
+  mounted: function() {
+    this.getPlaylistNames(); 
+  },
+  methods: {
+    getPlaylistNames: function() {
+      axios
+      .get('http://192.168.0.58:9070/songapi/playlist/')
+      .then(response => {
+          this.allplaylists = response.data;
+          //console.log(this.playList);
+      })
+      .catch(error => {
+          console.log(error);
+          this.errored = true;
+      })            
+   },
+   addPlaylistSongEntry: function() {
+     //console.log(this.song)
+      let config = {
+          headers : {
+          'Content-Type' : 'multipart/form-data'
+      }
+      }
+      var upload = new FormData();
+      upload.append('playlist_id', this.selectedPlaylist.id);
+      upload.append('song_id', this.$store.state.songToAddToPlaylist.id);
+      axios.defaults.xsrfCookieName = 'csrftoken'
+      axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+      axios
+          .post('http://192.168.0.58:9070/songapi/playlistsong/', upload, config)
+          .then(response => {
+            this.message = 'added'
+            this.$store.dispatch('setSongToAddToPlaylist', {});
+          })
+          .catch(error => {
+            this.message = 'error - see log'
+            this.$store.dispatch('setSongToAddToPlaylist', {});
+            console.log('addPlaylistSongEntry:', error)  
+          })
+    },
+    closeModal() {
+      this.$store.dispatch('setShowAddSongToPlaylistComponent', false)
+    }
+  }
+
+}
+</script>
+
+<style>
+@import '../assets/css/modal-playlist.css';
+</style>
