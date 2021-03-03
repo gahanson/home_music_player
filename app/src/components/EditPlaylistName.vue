@@ -50,10 +50,15 @@ export default {
   methods: {
     deletePlaylistOnDatabase: function() {
       let theurl = this.$store.state.playlistToEdit.url;
+      let config = {
+          headers : {
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+        }
+      }
       axios.defaults.xsrfCookieName = 'csrftoken'
       axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
       axios
-        .delete(theurl)
+        .delete(theurl, config)
         .then(response => {
             this.$store.dispatch('setPlaylistNames');
             this.$store.dispatch('setPlaylistEditModalValue', {});
@@ -65,7 +70,8 @@ export default {
     updatePlaylistOnDatabase: function() {
       let config = {
           headers : {
-          'Content-Type' : 'multipart/form-data'
+          'Content-Type' : 'multipart/form-data',
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
         }
       }
       var upload = new FormData();

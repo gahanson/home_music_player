@@ -24,10 +24,15 @@ import axios from 'axios'
 export default {
     methods: {
         deletePlaylistSong: async function(playlistsong) {
+            let config = {
+                headers : {
+                'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+                }
+            }
             axios.defaults.xsrfCookieName = 'csrftoken'
             axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
             axios
-                .delete(playlistsong.url)
+                .delete(playlistsong.url, config)
                 .then(response => {
                     this.$store.dispatch('setCurrentPlaylist', playlistsong.playlist.name)
                 })

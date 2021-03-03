@@ -53,7 +53,8 @@ export default {
     addPlaylist: function() {
       let config = {
           headers : {
-          'Content-Type' : 'multipart/form-data'
+          'Content-Type' : 'multipart/form-data',
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
       }
       }
       var upload = new FormData();
@@ -61,7 +62,7 @@ export default {
       axios.defaults.xsrfCookieName = 'csrftoken'
       axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
       axios
-          .post('http://192.168.0.58:9070/songapi/playlist/', upload, config)
+          .post('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/playlist/', upload, config)
           .then(response => {
             this.$store.dispatch('setPlaylistNames');
           })

@@ -53,8 +53,13 @@ export default {
   },
   methods: {
     getPlaylistNames: function() {
+      let config = {
+          headers : {
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+        }
+      }
       axios
-      .get('http://192.168.0.58:9070/songapi/playlist/')
+      .get('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/playlist/', config)
       .then(response => {
           this.allplaylists = response.data;
           //console.log(this.playList);
@@ -68,7 +73,8 @@ export default {
      //console.log(this.song)
       let config = {
           headers : {
-          'Content-Type' : 'multipart/form-data'
+          'Content-Type' : 'multipart/form-data',
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
       }
       }
       var upload = new FormData();
@@ -77,7 +83,7 @@ export default {
       axios.defaults.xsrfCookieName = 'csrftoken'
       axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
       axios
-          .post('http://192.168.0.58:9070/songapi/playlistsong/', upload, config)
+          .post('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/playlistsong/', upload, config)
           .then(response => {
             this.message = 'added'
             this.$store.dispatch('setSongToAddToPlaylist', {});

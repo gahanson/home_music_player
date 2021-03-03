@@ -155,8 +155,13 @@ export default new Vuex.Store({
       
     },
     setPlaylistNames({commit}) {
+      let config = {
+          headers : {
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+        }
+      }
       axios
-      .get('http://192.168.0.58:9070/songapi/playlist/')
+      .get('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/playlist/', config)
       .then(response => {
         commit('setPlaylistNames', response.data);
       })
@@ -165,8 +170,13 @@ export default new Vuex.Store({
       })            
     },
     setArtistNames({commit}) {
+      let config = {
+          headers : {
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+        }
+      }
       axios
-      .get('http://192.168.0.58:9070/songapi/artist/')
+      .get('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/artist/', config)
       .then(response => {
         commit('setArtistNames', response.data);
       })
@@ -175,8 +185,13 @@ export default new Vuex.Store({
       })            
     },
     setCurrentPlaylist({commit}, name) {
+      let config = {
+          headers : {
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+        }
+      }
       axios
-      .get('http://192.168.0.58:9070/songapi/playlistsong/?search='+name)
+      .get('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/playlistsong/?search='+name, config)
       .then(response => {
         commit('setCurrentPlaylist', response.data);
         commit('setCurrentPlaylistName', name);
@@ -186,8 +201,13 @@ export default new Vuex.Store({
       })            
     },
     setCurrentArtist({commit}, name) {
+      let config = {
+          headers : {
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+        }
+      }
       axios
-      .get('http://192.168.0.58:9070/songapi/song/?search='+name)
+      .get('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/song/?search='+name, config)
       .then(response => {
         commit('setCurrentArtistFiles', response.data);
         commit('setCurrentArtistName', name);
