@@ -85,7 +85,7 @@ export default {
           this.$store.dispatch('setPlaylistEditModalValue', {});
         })
         .catch(error => {
-            console.log(error)
+            console.log('updatePlaylistOnDatabase', error)
         })
     },
     closeModal() {

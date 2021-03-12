@@ -18,6 +18,9 @@
               <li>
                   <a class="navbar-brand" @click="$store.dispatch('showSection', 'musicplayer')" href="#">Music</a>
               </li>
+              <li>
+                  <a class="navbar-brand" @click="$store.dispatch('showSection', 'settings')" href="#">Settings</a>
+              </li>
           </ul>
 
       </nav>
@@ -39,6 +42,7 @@
           <artists />
           <playlists />
           <music-player />
+          <settings />
           
       </div>
     </div>
@@ -52,7 +56,7 @@ import Playlists from './components/Playlists.vue';
 import CurrentArtist from './components/CurrentArtist.vue';
 import Artists from './components/Artists.vue';
 import MusicPlayer from './components/MusicPlayer.vue';
-import BottomNav from './components/BottomNav.vue';
+import Settings from './components/Settings.vue';
 
 export default {
   name: 'App',
@@ -71,7 +75,7 @@ export default {
     CurrentArtist,
     Artists,
     MusicPlayer,
-    BottomNav
+    Settings
   }
 }
 </script>

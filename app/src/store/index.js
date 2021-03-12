@@ -11,6 +11,7 @@ export default new Vuex.Store({
     showArtists: false,
     showPlaylists: false,
     showMusicPlayer: true,
+    showSettings: false,
     showPlaylistEditComponent: false,
     showAddPlaylistComponent: false,
     showAddSongToPlaylistComponent: false,
@@ -21,8 +22,9 @@ export default new Vuex.Store({
     currentArtistName: 'default',
     currentArtistFiles: [],
     playlistToEdit: {},
-    songToAddToPlaylist: {}
-
+    songToAddToPlaylist: {},
+    settings: {'source_ip':'', 'source_script_path':''},
+    refreshInProgress: false
   },
   mutations: {
     showSection: function(state, sectionName) {
@@ -33,6 +35,7 @@ export default new Vuex.Store({
           state.showArtists = true
           state.showPlaylists = false
           state.showMusicPlayer = false
+          state.showSettings = false
           break;
         case 'playlists':
           state.showCurrentArtist = false
@@ -40,6 +43,7 @@ export default new Vuex.Store({
           state.showArtists = false
           state.showPlaylists = true
           state.showMusicPlayer = false
+          state.showSettings = false
           break;
         case 'musicplayer':
           state.showCurrentArtist = false
@@ -47,6 +51,7 @@ export default new Vuex.Store({
           state.showArtists = false
           state.showPlaylists = false
           state.showMusicPlayer = true
+          state.showSettings = false
           break;
         case 'currentartist':
           state.showCurrentArtist = true
@@ -54,6 +59,7 @@ export default new Vuex.Store({
           state.showArtists = false
           state.showPlaylists = false
           state.showMusicPlayer = false
+          state.showSettings = false
           break;
         case 'currentplaylist':
           state.showCurrentArtist = false
@@ -61,6 +67,15 @@ export default new Vuex.Store({
           state.showArtists = false
           state.showPlaylists = false
           state.showMusicPlayer = false
+          state.showSettings = false
+          break;
+        case 'settings':
+          state.showCurrentArtist = false
+          state.showCurrentPlaylist = false
+          state.showArtists = false
+          state.showPlaylists = false
+          state.showMusicPlayer = false
+          state.showSettings = true
           break;
       
         default:
@@ -102,6 +117,12 @@ export default new Vuex.Store({
     },
     setSongToAddToPlaylist(state, value) {
       state.songToAddToPlaylist = value
+    },
+    setSettings(state, value) {
+      state.settings = {'source_ip':value['source_ip'], 'source_script_path':value['source_script_path']}
+    },
+    setRefreshInprogress(state, value) {
+      state.refreshInProgress = value
     }
     
   },
@@ -221,6 +242,25 @@ export default new Vuex.Store({
     },
     setSongToAddToPlaylist({commit}, value) {
       commit('setSongToAddToPlaylist', value)
+    },
+    setSettings({commit}) {
+      let config = {
+          headers : {
+          'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+        }
+      }
+      axios
+      .get('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/settings/', config)
+      .then(response => {
+        let dbValues = {'source_ip':response.data[0]['source_ip'], 'source_script_path':response.data[0]['source_script_path']}
+        commit('setSettings', dbValues);
+      })
+      .catch(error => {
+          console.log('setSettings:', error);
+      })        
+    },
+    setRefreshInprogress({commit}, value) {
+      commit('setRefreshInprogress', value)
     }
 
   },
