@@ -12,21 +12,37 @@
 
               <div>
               
-              <form>
-                <div class="form-group">
-                <label for="name">Name</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Enter Playlist Name"
-                    v-model="playlistName"
-                    required="required" >
-                </div>
-                <button type="submit" class="btn btn-primary" v-on:click="updatePlaylistOnDatabase()">Update</button>
-              </form>
-              <p></p>
-              <button class="btn btn-danger" v-on:click="deletePlaylistOnDatabase()">Delete</button>
+                <form>
+                  <div class="form-group">
+                  <label for="name">Name</label>
+                  <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Playlist Name"
+                      v-model="playlistName"
+                      required="required" >
+                  </div>
+                  <button type="submit" class="btn btn-primary" v-on:click="updatePlaylistOnDatabase()">Update</button>
+                  <button class="btn btn-danger" v-on:click="deletePlaylistOnDatabase()">Delete</button>
+                </form>
 
+              </div>
+
+              <p/>
+
+              <div>
+                <ul class="modal-list-group">
+                  <li class="list-group-item" v-for="item in this.$parent.thePlaylistBeingEdited">
+                      <span>{{item.song.title}}</span>
+                      <button
+                      type="button"
+                      class="btn btn-secondary btn-sm"
+                      style="margin-left: 10px;"
+                      @click="deletePlaylistSong(item)">
+                      -
+                      </button>
+                  </li>
+                </ul>
               </div>
 
               <div class="modal-footer-playlist">
@@ -87,6 +103,23 @@ export default {
         .catch(error => {
             console.log('updatePlaylistOnDatabase', error)
         })
+    },
+    deletePlaylistSong: async function(playlistsong) {
+        let config = {
+            headers : {
+            'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+            }
+        }
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+        axios
+            .delete(playlistsong.url, config)
+            .then(response => {
+                this.$parent.loadThePlaylistBeingEdited();
+            })
+            .catch(error => {
+              console.log('deletePlaylistSong:', error)
+            })
     },
     closeModal() {
       this.$store.dispatch('setPlaylistNames');

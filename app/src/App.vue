@@ -16,7 +16,7 @@
                   <a class="navbar-brand" @click="$store.dispatch('showSection', 'playlists')" href="#">Playlists</a>
               </li>
               <li>
-                  <a class="navbar-brand" @click="$store.dispatch('showSection', 'musicplayer')" href="#">Music</a>
+                  <a class="navbar-brand" @click="$store.dispatch('showSection', 'musicplayer')" href="#">Music Player</a>
               </li>
               <li>
                   <a class="navbar-brand" @click="$store.dispatch('showSection', 'settings')" href="#">Settings</a>

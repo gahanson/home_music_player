@@ -7,7 +7,8 @@
         </div>
         <ul>
             <li class="pointer" v-for="artist in this.$store.state.artistNames">
-                <a @click="$store.dispatch('setCurrentArtist', artist.name); $store.dispatch('showSection', 'currentartist')" href="#">{{artist.name}}</a>
+                <a data-toggle="collapse" :href="'#song'+artist.id" v-on:click="showTheArtistSongs('song'+artist.id)">{{artist.name}}</a>
+                <CurrentArtist :ref="'song'+artist.id" v-bind:divId="'song'+artist.id" v-bind:currentArtist="artist.name" />
             </li>
         </ul>
     </div>
@@ -15,10 +16,14 @@
 
 <script>
 import axios from 'axios';
+import CurrentArtist from './CurrentArtist.vue';
 
 export default {
     mounted: function() { 
         this.$store.dispatch('setArtistNames');       
+    },
+    components: {
+        CurrentArtist
     },
     methods: {
         refreshSongs: function() {
@@ -41,6 +46,10 @@ export default {
                 .catch(error => {
                     console.log('refreshSongs', error)
                 })
+        },
+        showTheArtistSongs: function(refName) {
+            this.$refs[refName][0].setCurrentArtist();
+            //console.log(this.$refs[refName])
         }
     }
 }

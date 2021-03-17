@@ -1,17 +1,10 @@
 <template>
     <div id="currentplaylist" v-if="$store.state.showCurrentPlaylist">
         <div>
-            <p style="background-color: blue;">{{ this.$store.state.currentPlaylistName }}</p>
+            <p style="color: black; background-color: #80b3ff;">current playlist: -- {{ this.$store.state.currentPlaylistName }} --</p>
             <ul class="list-group">
                 <li class="list-group-item" v-for="item in this.$store.state.currentPlaylist">
                     <span>{{item.song.title}}</span>
-                    <button
-                    type="button"
-                    class="btn btn-secondary btn-sm"
-                    style="margin-left: 10px;"
-                    @click="deletePlaylistSong(item)">
-                    -
-                    </button>
                 </li>
             </ul>
         </div>

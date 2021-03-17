@@ -73,6 +73,7 @@ export default {
   data: function() {
     
       return {
+        musicPlayerKey: 0,
         playIcon: 'play',
         shuffle: false,
         songLoaded: false,

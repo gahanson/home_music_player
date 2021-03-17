@@ -1,5 +1,5 @@
 <template>
-  <div id="addtoplaylist" v-if="$store.state.showAddSongToPlaylistComponent">
+  <div id="addtoplaylist" :key="addToPlaylistKey" v-if="$store.state.showAddSongToPlaylistComponent">
     <transition name="modal-playlist">
       <div class="modal-mask-playlist">
         <div class="modal-wrapper-playlist">
@@ -43,6 +43,7 @@ import axios from 'axios';
 export default {
   data: function() {
     return {
+      addToPlaylistKey: 0,
       message: "---",
       allplaylists: [],
       selectedPlaylist: {},
@@ -87,17 +88,21 @@ export default {
           .then(response => {
             this.message = 'added'
             this.$store.dispatch('setSongToAddToPlaylist', {});
+            this.forceRerender();
           })
           .catch(error => {
             this.message = 'error - see log'
             this.$store.dispatch('setSongToAddToPlaylist', {});
-            console.log('addPlaylistSongEntry:', error)  
+            // console.log('addPlaylistSongEntry:', error)  
           })
     },
     closeModal() {
       this.$store.dispatch('setShowAddSongToPlaylistComponent', false)
+    },
+    forceRerender: function() {
+      this.addToPlaylistKey += 1; //updating the key will force Vue to rerender component, including computed values
     }
-  }
+}
 
 }
 </script>

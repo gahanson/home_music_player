@@ -1,11 +1,15 @@
 <template>
-    <div id="currentartist" v-if="$store.state.showCurrentArtist">
-        <h2>Current Artist</h2>
+    <div class="collapse multi-collapse" :id="divId">
+        Songs
         <p></p>
-        {{ this.$store.state.currentArtistName }}
-        <p></p>
+        <button
+            type="button"
+            class="btn btn-secondary btn-sm custom-style"
+            @click="setCurrentArtist()">
+            refresh
+        </button>
         <ul class="list-group">
-            <li class="list-group-item" v-for="item in this.$store.state.currentArtistFiles">
+            <li class="list-group-item" v-for="item in currentArtistFiles">
                 <span class="custom-style">{{ item.title }}</span>
                 <button
                   type="button"
@@ -20,11 +24,39 @@
 </template>
 
 <script>
+import axios from 'axios';
 import AddSongToPlaylist from './AddSongToPlaylist.vue';
 
 export default {
+    props: ['divId', 'currentArtist'],
     components: {
         AddSongToPlaylist
+    },
+    data: function() {
+        return {
+            currentArtistKey: 0,
+            currentArtistFiles: []
+        }
+    },
+    methods: {
+        forceRerender: function() {
+            this.currentArtistKey += 1; //updating the key will force Vue to rerender component, including computed values
+        },
+        setCurrentArtist() {
+            let config = {
+                headers : {
+                'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
+                }
+            }
+            axios
+            .get('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/song/?search='+this.currentArtist, config)
+            .then(response => {
+                this.currentArtistFiles = response.data;
+            })
+            .catch(error => {
+                console.log('setCurrentArtist:', error);
+            })            
+        }
     }
 }
 </script>
