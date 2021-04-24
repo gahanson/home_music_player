@@ -1,13 +1,10 @@
 <template>
     <div class="collapse multi-collapse" :id="divId">
-        Songs
+        <button type="button" class="btn btn-outline-primary btn-sm" v-on:click="setCurrentArtist()">refresh artist songs</button>
+        <div class="alert alert-primary" role="alert" v-if="this.refreshInProgress">
+        Refresh in-progress. Please wait...
+        </div>
         <p></p>
-        <button
-            type="button"
-            class="btn btn-secondary btn-sm custom-style"
-            @click="setCurrentArtist()">
-            refresh
-        </button>
         <ul class="list-group">
             <li class="list-group-item" v-for="item in currentArtistFiles">
                 <span class="custom-style">{{ item.title }}</span>
@@ -35,7 +32,8 @@ export default {
     data: function() {
         return {
             currentArtistKey: 0,
-            currentArtistFiles: []
+            currentArtistFiles: [],
+            refreshInProgress: false
         }
     },
     methods: {
@@ -43,6 +41,7 @@ export default {
             this.currentArtistKey += 1; //updating the key will force Vue to rerender component, including computed values
         },
         setCurrentArtist() {
+            this.refreshInProgress = true;
             let config = {
                 headers : {
                 'Authorization' : 'Token '+process.env.VUE_APP_SONG_API_KEY
@@ -52,6 +51,7 @@ export default {
             .get('http://'+process.env.VUE_APP_SONG_API_IPADDRESS+'/songapi/song/?search='+this.currentArtist, config)
             .then(response => {
                 this.currentArtistFiles = response.data;
+                this.refreshInProgress = false;
             })
             .catch(error => {
                 console.log('setCurrentArtist:', error);

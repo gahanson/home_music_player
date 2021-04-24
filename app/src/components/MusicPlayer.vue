@@ -1,11 +1,11 @@
 <template>
     <div id="musicplayer" v-if="$store.state.showMusicPlayer">
          
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col"></div>
-                <div class="col-10 justify-content-center">
-                    <h5>{{ songTitle }}</h5>
+                <div class="col-8 justify-content-center">
+                    <h5>{{ songTitle.split(".")[0] }}</h5>
                 </div>
                 <div class="col"></div>
             </div>
@@ -18,11 +18,10 @@
             </div>
             <p></p>
             <div class="row">
-                <div class="col-2">
-                    <div ref="currentTime" id="currentTime">00:00</div>
-                </div>
+                <div class="col-2 justify-content-end" ref="currentTime" id="currentTime">00:00</div>
                 <div class="col-8 justify-content-center">
                     <input
+                    class="container-fluid"
                     type="range"
                     ref="progressBar"
                     id="progress-bar"
@@ -32,20 +31,18 @@
                     v-on:change="changeProgressBar()"
                     /> 
                 </div>
-                <div class="col-2">
-                    <div ref="durationTime" id="durationTime">00:00</div>
-                </div>
+                <div class="col-2 justify-content-end" ref="durationTime" id="durationTime">00:00</div>
             </div>
             <p></p>
             <div class="row">
                 <div class="col-2"></div>
-                <div class="col">
+                <div class="col-2 justify-content-end">
                     <font-awesome-icon icon="step-backward" size="2x"  v-on:click="previousSong()" />
                 </div>
-                <div class="col">
+                <div class="col-4 text-center">
                     <font-awesome-icon :icon="playIcon" size="3x" v-on:click="play()" />
                 </div>
-                <div class="col">
+                <div class="col-2 justify-content-start">
                     <font-awesome-icon icon="step-forward" size="2x" v-on:click="nextSong()" />
                 </div>
                 <div class="col-2"></div>

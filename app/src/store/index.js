@@ -14,6 +14,7 @@ export default new Vuex.Store({
     showSettings: false,
     showPlaylistEditComponent: false,
     showAddPlaylistComponent: false,
+    showAddRandomPlaylistComponent: false,
     showAddSongToPlaylistComponent: false,
     playlistNames: [],
     currentPlaylistName: '---',
@@ -24,7 +25,6 @@ export default new Vuex.Store({
     playlistToEdit: {},
     songToAddToPlaylist: {},
     settings: {'source_ip':'', 'source_script_path':''},
-    refreshInProgress: false
   },
   mutations: {
     showSection: function(state, sectionName) {
@@ -88,6 +88,9 @@ export default new Vuex.Store({
     setShowAddPlaylistComponent(state, newValue) {
       state.showAddPlaylistComponent = newValue
     },
+    setShowAddRandomPlaylistComponent(state, newValue) {
+      state.showAddRandomPlaylistComponent = newValue
+    },
     setShowAddSongToPlaylistComponent(state, newValue) {
       state.showAddSongToPlaylistComponent = newValue
     },
@@ -120,9 +123,6 @@ export default new Vuex.Store({
     },
     setSettings(state, value) {
       state.settings = {'source_ip':value['source_ip'], 'source_script_path':value['source_script_path']}
-    },
-    setRefreshInprogress(state, value) {
-      state.refreshInProgress = value
     }
     
   },
@@ -153,6 +153,21 @@ export default new Vuex.Store({
 
         case false:
           commit('setShowAddPlaylistComponent', false)
+          break;
+      
+        default:
+          break;
+      }
+      
+    },
+    setShowAddRandomPlaylistComponent({commit}, newValue) {
+      switch (newValue) {
+        case true:
+          commit('setShowAddRandomPlaylistComponent', true)
+          break;
+
+        case false:
+          commit('setShowAddRandomPlaylistComponent', false)
           break;
       
         default:
@@ -258,9 +273,6 @@ export default new Vuex.Store({
       .catch(error => {
           console.log('setSettings:', error);
       })        
-    },
-    setRefreshInprogress({commit}, value) {
-      commit('setRefreshInprogress', value)
     }
 
   },
