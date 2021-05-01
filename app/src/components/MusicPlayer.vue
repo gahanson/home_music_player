@@ -46,6 +46,8 @@
                     <font-awesome-icon icon="step-forward" size="2x" v-on:click="nextSong()" />
                 </div>
                 <div class="col-2"></div>
+                <audio ref="mp3Player" preload="none"></audio>
+
             </div>
             <div class="row">
                 <div class="col col-2"></div>
@@ -77,7 +79,7 @@ export default {
         songTitle: '---',
         songArtist: '---',
         playing: false,
-        playOrderIndex: 0,
+        playOrderIndex: 0, 
         currentSong: new Audio()
       }
 
@@ -101,7 +103,7 @@ export default {
                 if (selectedItem) {
                     this.songTitle = selectedItem.title
                     this.songArtist = selectedItem.artist.name
-                    this.currentSong = new Audio(selectedItem.remote_url); 
+                    this.currentSong.src = selectedItem.remote_url; //in the resetSong() function the audio object is reset explicitly to not have a source file
                     this.currentSong.onended = (event) => {
                         if (this.playOrderIndex == (this.currentPlaylist.length - 1) ) {
                             this.resetSong();
@@ -177,8 +179,9 @@ export default {
     },
     resetSong: function() {
         
-            this.currentSong.pause();
-            this.currentSong.currentTime  = 0;
+            this.currentSong.pause(); //first three lines reset the audio object
+            this.currentSong.removeAttribute('src');
+            this.currentSong.load();
             this.playIcon = 'play';
             this.playing = false;
             this.stopInterval();
